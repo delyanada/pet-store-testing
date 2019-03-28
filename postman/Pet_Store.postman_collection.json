@@ -479,10 +479,22 @@
 			]
 		},
 		{
-			"name": "Store",
+			"name": "STORE",
 			"item": [
 				{
 					"name": "Returns pet inventories by status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "25de4a3f-b59d-4378-b789-aa047063fbe8",
+								"exec": [
+									"tests[\"returns 200\"] = pm.response.code == 200"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -513,6 +525,413 @@
 							"script": {
 								"id": "d159ba26-e397-401e-a3f8-89a8807cdc41",
 								"exec": [
+									"tests[\"returns 200\"] = pm.response.code == 200",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "39bb0165-dd53-485b-9438-a296e99c6507",
+								"exec": [
+									"var randomPetId = _.random(999999999)",
+									"postman.setEnvironmentVariable(\"random_order_id\", randomPetId)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": {{random_order_id}},\n  \"petId\": 0,\n  \"quantity\": 0,\n  \"shipDate\": \"2019-03-27T19:40:17.436Z\",\n  \"status\": \"placed\",\n  \"complete\": false\n}"
+						},
+						"url": {
+							"raw": "{{url}}/v2/store/order",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"v2",
+								"store",
+								"order"
+							]
+						},
+						"description": "order placed for purchasing the pet\n"
+					},
+					"response": []
+				},
+				{
+					"name": "Place invalid order ( Bad Request )",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d159ba26-e397-401e-a3f8-89a8807cdc41",
+								"exec": [
+									"tests[\"returns 500 (should return 400 Bad Request really)\"] = pm.response.code == 500",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "39bb0165-dd53-485b-9438-a296e99c6507",
+								"exec": [
+									"var randomPetId = _.random(999999999)",
+									"postman.setEnvironmentVariable(\"random_order_id\", randomPetId)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/v2/store/order",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"v2",
+								"store",
+								"order"
+							]
+						},
+						"description": "Sending no body should result in 400 Bad Request but the Petstore API returns 500 Server Error. Shame!"
+					},
+					"response": []
+				},
+				{
+					"name": "Place order with bad timestamp",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d159ba26-e397-401e-a3f8-89a8807cdc41",
+								"exec": [
+									"tests[\"returns 500 (should return 400 Bad Request really)\"] = pm.response.code == 500",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "39bb0165-dd53-485b-9438-a296e99c6507",
+								"exec": [
+									"var randomPetId = _.random(999999999)",
+									"postman.setEnvironmentVariable(\"random_order_id\", randomPetId)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": {{random_order_id}},\n  \"petId\": 0,\n  \"quantity\": 0,\n  \"shipDate\": \"2019na;lskdals;dksal;dkasl;dkas;ldkas;l:40:17.436Z\",\n  \"status\": \"placed\",\n  \"complete\": false\n}"
+						},
+						"url": {
+							"raw": "{{url}}/v2/store/order",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"v2",
+								"store",
+								"order"
+							]
+						},
+						"description": "Sending no body should result in 400 Bad Request but the Petstore API returns 500 Server Error. Shame!"
+					},
+					"response": []
+				},
+				{
+					"name": "Place order with bad  request ( field type )",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d159ba26-e397-401e-a3f8-89a8807cdc41",
+								"exec": [
+									"tests[\"returns 200 (should return 400 Bad Request really)\"] = pm.response.code == 200",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "39bb0165-dd53-485b-9438-a296e99c6507",
+								"exec": [
+									"var randomPetId = _.random(999999999)",
+									"postman.setEnvironmentVariable(\"random_order_id\", randomPetId)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": {{random_order_id}},\n  \"petId\": 0,\n  \"quantity\": 0,\n  \"shipDate\": \"2019-03-27T19:40:17.436Z\",\n  \"status\": 1,\n  \"complete\": false\n}"
+						},
+						"url": {
+							"raw": "{{url}}/v2/store/order",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"v2",
+								"store",
+								"order"
+							]
+						},
+						"description": "Sending invalid type field should result in 400 Bad Request but the Petstore API converst the type and returns 200 OK"
+					},
+					"response": []
+				},
+				{
+					"name": "Find purchase order by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e7689e18-fc83-4a6f-b0b4-2f3799452e68",
+								"exec": [
+									"tests[\"returns 200\"] = pm.response.code == 200"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/v2/store/order/{{random_order_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"v2",
+								"store",
+								"order",
+								"{{random_order_id}}"
+							]
+						},
+						"description": "ID of pet that needs to be fetched\n\nFor valid response try integer IDs with value >= 1 and <= 10. Other values will generated exceptions"
+					},
+					"response": []
+				},
+				{
+					"name": "Find purchase order by invalid ID ( 404 )",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "b166daa4-1e67-4388-a2d1-87f4c8a5889b",
+								"exec": [
+									"var randomPetId = _.random(999999999)",
+									"postman.setEnvironmentVariable(\"new_random_order_id\", randomPetId)"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "dfbcc801-8566-4d66-b599-305571104bff",
+								"exec": [
+									"tests[\"returns 404\"] = pm.response.code == 404"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/v2/store/order/{{new_random_order_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"v2",
+								"store",
+								"order",
+								"{{new_random_order_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete purchase order by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2f897afa-1e6b-4966-84d7-6d3d7824ba35",
+								"exec": [
+									"tests[\"returns 200\"] = pm.response.code == 200"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/v2/store/order/{{random_order_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"v2",
+								"store",
+								"order",
+								"{{random_order_id}}"
+							]
+						},
+						"description": "ID of the order that needs to be deleted"
+					},
+					"response": []
+				},
+				{
+					"name": "Validate order deleted",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ceb646ae-a0ff-4083-921e-3be5f9b93de1",
+								"exec": [
+									"tests[\"returns 404\"] = pm.response.code == 404"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/v2/store/order/{{random_order_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"v2",
+								"store",
+								"order",
+								"{{random_order_id}}"
+							]
+						},
+						"description": "ID of pet that needs to be fetched\n\nFor valid response try integer IDs with value >= 1 and <= 10. Other values will generated exceptions"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "USER",
+			"item": [
+				{
+					"name": "Create user",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "1413dd01-9554-48d1-93e4-6e0cc35dfab4",
+								"exec": [
+									"var randomPetId = _.random(999999999)",
+									"postman.setEnvironmentVariable(\"random_user_id\", randomPetId)",
+									"postman.setEnvironmentVariable(\"random_username\", randomPetId)"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "febf3b2c-b134-406f-893f-ea17c23a32c0",
+								"exec": [
+									"tests[\"returns 200\"] = pm.response.code == 200",
 									""
 								],
 								"type": "text/javascript"
@@ -531,100 +950,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"id\": 0,\n  \"petId\": 0,\n  \"quantity\": 0,\n  \"shipDate\": \"2019-03-27T19:40:17.436Z\",\n  \"status\": \"placed\",\n  \"complete\": false\n}"
-						},
-						"url": {
-							"raw": "{{url}}/v2/store/order",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"v2",
-								"store",
-								"order"
-							]
-						},
-						"description": "order placed for purchasing the pet\n"
-					},
-					"response": []
-				},
-				{
-					"name": "Find purchase order by ID",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{url}}/v2/store/order/{{orderId}}",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"v2",
-								"store",
-								"order",
-								"{{orderId}}"
-							]
-						},
-						"description": "ID of pet that needs to be fetched\n\nFor valid response try integer IDs with value >= 1 and <= 10. Other values will generated exceptions"
-					},
-					"response": []
-				},
-				{
-					"name": "Delete purchase order by ID",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "",
-								"value": "",
-								"type": "text",
-								"disabled": true
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{url}}/v2/store/order/{{order_Id}}",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"v2",
-								"store",
-								"order",
-								"{{order_Id}}"
-							]
-						},
-						"description": "ID of the order that needs to be deleted"
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "USER",
-			"item": [
-				{
-					"name": "Create user",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"id\": 0,\n  \"username\": \"string\",\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"email\": \"string\",\n  \"password\": \"string\",\n  \"phone\": \"string\",\n  \"userStatus\": 0\n}"
+							"raw": "{\n  \"id\": {{random_user_id}},\n  \"username\": {{random_username}},\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"email\": \"string\",\n  \"password\": \"string\",\n  \"phone\": \"string\",\n  \"userStatus\": 0\n}"
 						},
 						"url": {
 							"raw": "{{url}}/v2/user",
@@ -641,7 +967,164 @@
 					"response": []
 				},
 				{
+					"name": "Get user by user name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "013e5601-9184-4962-99aa-e365bc07c233",
+								"exec": [
+									"tests[\"returns 200\"] = pm.response.code == 200",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/v2/user/{{random_username}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"v2",
+								"user",
+								"{{random_username}}"
+							]
+						},
+						"description": "The name that needs to be fetched. Use user1 for testing."
+					},
+					"response": []
+				},
+				{
+					"name": "Updated user ",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "cb4abec7-418f-4bf6-a727-847e07fd881a",
+								"exec": [
+									"var username = postman.getEnvironmentVariable(\"random_username\")",
+									"var updatedUsername = username + 99999;",
+									"postman.setEnvironmentVariable(\"random_updated_username\", updatedUsername)"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "15674660-82a3-4247-8e28-dc260cf60585",
+								"exec": [
+									"tests[\"returns 200\"] = pm.response.code == 200",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": {{random_user_id}},\n  \"username\": {{random_updated_username}},\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"email\": \"string\",\n  \"password\": \"string\",\n  \"phone\": \"string\",\n  \"userStatus\": 0\n}\n"
+						},
+						"url": {
+							"raw": "{{url}}/v2/user/{{random_username}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"v2",
+								"user",
+								"{{random_username}}"
+							]
+						},
+						"description": "name that need to be updated"
+					},
+					"response": []
+				},
+				{
+					"name": "Get user by updated user name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6d27ecb2-af2c-4f57-a3a2-7fba9b3c302f",
+								"exec": [
+									"tests[\"returns 200\"] = pm.response.code == 200",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/v2/user/{{random_updated_username}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"v2",
+								"user",
+								"{{random_updated_username}}"
+							]
+						},
+						"description": "The name that needs to be fetched. Use user1 for testing."
+					},
+					"response": []
+				},
+				{
 					"name": "Creates list of users with given input array",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e513e8ae-f2f3-44d2-baf8-4bcbf4810e38",
+								"exec": [
+									"tests[\"returns 200\"] = pm.response.code == 200",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "7d649277-881f-447d-ac22-7a01362d1467",
+								"exec": [
+									"var randomPetId = _.random(999999999)",
+									"postman.setEnvironmentVariable(\"random_user_id\", randomPetId)",
+									"",
+									"var randomPetId2 = _.random(999999999)",
+									"postman.setEnvironmentVariable(\"random_user_id_2\", randomPetId2 )"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -654,7 +1137,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "[\n  {\n    \"id\": 0,\n    \"username\": \"string\",\n    \"firstName\": \"string\",\n    \"lastName\": \"string\",\n    \"email\": \"string\",\n    \"password\": \"string\",\n    \"phone\": \"string\",\n    \"userStatus\": 0\n  }\n]"
+							"raw": "[\n  {\n    \"id\": 0,\n    \"username\": {{random_user_id}},\n    \"firstName\": \"string\",\n    \"lastName\": \"string\",\n    \"email\": \"string\",\n    \"password\": \"string\",\n    \"phone\": \"string\",\n    \"userStatus\": 0\n  },{\n    \"id\": 0,\n    \"username\": {{random_user_id_2}},\n    \"firstName\": \"string\",\n    \"lastName\": \"string\",\n    \"email\": \"string\",\n    \"password\": \"string\",\n    \"phone\": \"string\",\n    \"userStatus\": 0\n  }\n]"
 						},
 						"url": {
 							"raw": "{{url}}/v2/user/createWithArray",
@@ -672,38 +1155,20 @@
 					"response": []
 				},
 				{
-					"name": "Creates list of users with given input array",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"value": "application/json",
-								"type": "text"
+					"name": "Get user1 from array",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "013e5601-9184-4962-99aa-e365bc07c233",
+								"exec": [
+									"tests[\"returns 200\"] = pm.response.code == 200",
+									""
+								],
+								"type": "text/javascript"
 							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "[\n  {\n    \"id\": 0,\n    \"username\": \"string\",\n    \"firstName\": \"string\",\n    \"lastName\": \"string\",\n    \"email\": \"string\",\n    \"password\": \"string\",\n    \"phone\": \"string\",\n    \"userStatus\": 0\n  }\n]"
-						},
-						"url": {
-							"raw": "{{url}}/v2/user/createWithList",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"v2",
-								"user",
-								"createWithList"
-							]
-						},
-						"description": "List of user object"
-					},
-					"response": []
-				},
-				{
-					"name": "Logs user into the system",
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -712,7 +1177,92 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{url}}/v2/user/login",
+							"raw": "{{url}}/v2/user/{{random_user_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"v2",
+								"user",
+								"{{random_user_id}}"
+							]
+						},
+						"description": "The name that needs to be fetched. Use user1 for testing."
+					},
+					"response": []
+				},
+				{
+					"name": "Get user2 from array",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "013e5601-9184-4962-99aa-e365bc07c233",
+								"exec": [
+									"tests[\"returns 200\"] = pm.response.code == 200",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/v2/user/{{random_user_id_2}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"v2",
+								"user",
+								"{{random_user_id_2}}"
+							]
+						},
+						"description": "The name that needs to be fetched. Use user1 for testing."
+					},
+					"response": []
+				},
+				{
+					"name": "Logs user into the system",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "662e9ee3-e9d8-49c5-add2-0c0a9be358a8",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "cf6011df-de2f-4318-8139-cd069555c9b5",
+								"exec": [
+									"tests[\"returns 200\"] = pm.response.code == 200",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/v2/user/login?username={{random_user_id}}&password=string",
 							"host": [
 								"{{url}}"
 							],
@@ -720,13 +1270,23 @@
 								"v2",
 								"user",
 								"login"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "{{random_user_id}}"
+								},
+								{
+									"key": "password",
+									"value": "string"
+								}
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Logs out current in user session",
+					"name": "Logs out current  user in session",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -749,62 +1309,7 @@
 					"response": []
 				},
 				{
-					"name": "Get user by user name",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{url}}/v2/user/{{username}}",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"v2",
-								"user",
-								"{{username}}"
-							]
-						},
-						"description": "The name that needs to be fetched. Use user1 for testing."
-					},
-					"response": []
-				},
-				{
-					"name": "Updated user ",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"id\": 0,\n  \"username\": \"string\",\n  \"firstName\": \"string\",\n  \"lastName\": \"string\",\n  \"email\": \"string\",\n  \"password\": \"string\",\n  \"phone\": \"string\",\n  \"userStatus\": 0\n}\n"
-						},
-						"url": {
-							"raw": "{{url}}/v2/user/{{username}}",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"v2",
-								"user",
-								"{{username}}"
-							]
-						},
-						"description": "name that need to be updated"
-					},
-					"response": []
-				},
-				{
-					"name": "Delete user",
+					"name": "Delete random user",
 					"request": {
 						"method": "DELETE",
 						"header": [],
@@ -813,14 +1318,134 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{url}}/v2/user/{{username}}",
+							"raw": "{{url}}/v2/user/{{random_username}}",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"v2",
 								"user",
-								"{{username}}"
+								"{{random_username}}"
+							]
+						},
+						"description": "The name that needs to be deleted"
+					},
+					"response": []
+				},
+				{
+					"name": "Check deleted random user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/v2/user/{{random_username}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"v2",
+								"user",
+								"{{random_username}}"
+							]
+						},
+						"description": "The name that needs to be deleted"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete random user id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/v2/user/{{random_user_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"v2",
+								"user",
+								"{{random_user_id}}"
+							]
+						},
+						"description": "The name that needs to be deleted"
+					},
+					"response": []
+				},
+				{
+					"name": "Check deleted random user id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/v2/user/{{random_user_id}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"v2",
+								"user",
+								"{{random_user_id}}"
+							]
+						},
+						"description": "The name that needs to be deleted"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete random user id 2",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/v2/user/{{random_user_id_2}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"v2",
+								"user",
+								"{{random_user_id_2}}"
+							]
+						},
+						"description": "The name that needs to be deleted"
+					},
+					"response": []
+				},
+				{
+					"name": "Check deleted random user id 2",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/v2/user/{{random_user_id_2}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"v2",
+								"user",
+								"{{random_user_id_2}}"
 							]
 						},
 						"description": "The name that needs to be deleted"
