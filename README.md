@@ -1,2 +1,1 @@
-# pet-store-testing
-Tests of the Pet store API 
+# Tests of the Pet store API  
