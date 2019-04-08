@@ -11,7 +11,7 @@ class TestPetSuccessful(unittest.TestCase):
 
     def test_crud_pet(self):
         # Add test to create pet
-        """This test creates,read,updates,delete"""
+        """This test creates,read,updates,delete pet"""
         pet_id=random.randint(1, 100000000)
 
         r=requests.post(url=f"{self.API_HOST}/v2/pet",
