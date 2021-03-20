@@ -14,4 +14,12 @@
 - Here is how you can run my test in Postman.
 
 
+
 ![Screens](https://github.com/delyanada/pet-store-testing/blob/master/Documentation/img/Screen%20Shot%202021-03-20%20at%2010.52.10%20AM.png?raw=true)
+
+I usually use Pycharm to run my tests, like so
+
+![Screens](https://github.com/delyanada/pet-store-testing/blob/master/Documentation/img/Screen%20Shot%202021-03-20%20at%2011.31.23%20AM.png?raw=true)
+
+
+
