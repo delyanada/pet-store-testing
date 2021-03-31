@@ -10,7 +10,7 @@
 
 - Testing with "requests" library
 
-## Explination
+## Explanation
 - Here is how you can run my test in Postman.
 
 
